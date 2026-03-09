@@ -1,439 +1,122 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Ranking Lists</title>
-    <style>
-        body {
-            font-family: sans-serif;
-        }
-        .game-list {
-            margin-bottom: 40px;
-        }
-        .game-item img {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .comment-section {
-            margin-top: 20px;
-        }
-        li button {
-            cursor: pointer;
-        }
-        li button:hover {
-            opacity: 0.8;
-        }
-        
-    </style>
-</head>
-<body>
-
-<h1>Ranking Lists</h1>
-
-<!-- Music Toggle -->
-<button id="music-toggle" onclick="toggleMusic()">🔊 Music On</button>
-
-<!-- Volume Slider -->
-<div style="margin: 10px 0;">
-    <label for="volume-slider">Volume:</label>
-    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5"
-           oninput="changeVolume(this.value)">
-</div>
-
-<!-- List Switcher -->
-<div style="margin: 20px 0;">
-    <button onclick="showList('zelda')">Zelda Rankings</button>
-    <button onclick="showList('dbz')">DBZ Rankings</button>
-</div>
-
-<div style="margin: 10px 0;">
-    <button onclick="resetVotes()" style="background-color: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;">
-        Reset
-    </button>
-</div>
-
-<!-- Zelda List -->
-<div id="zelda-list" class="game-list">
-    <ol id="game-list-zelda">
-        <li class="game-item">
-            <h3>Majora's Mask</h3>
-            <img src="majoras-mask.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-        <li class="game-item">
-            <h3>Ocarina of Time</h3>
-            <img src="ocarina.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-        <li class="game-item">
-            <h3>Twilight Princess</h3>
-            <img src="twilight.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-    </ol>
-
-    <div class="comment-section">
-        <h4>Comments</h4>
-        <ul id="comments-list-zelda"></ul>
-        <input type="text" id="input-zelda" placeholder="Add a comment..." 
-               onkeydown="checkEnter(event, 'input-zelda', 'comments-list-zelda')">
-        <button onclick="addComment('input-zelda', 'comments-list-zelda')">Post</button>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | JacksonMKrizanWIPFlying10112024</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">JacksonMKrizanWIPFlying10112024</div>
+      </div>
     </div>
+    <script>
 
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
 
-    <h2>More Info on the games</h2>
-<ul>
-    <li>
-        <a href="https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Majora%27s_Mask" target="_blank"> Majora's Mask 
-        </a>
-    </li>
-    <li>
-        <a href="https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Ocarina_of_Time" target="_blank"> Ocarina of Time
-        </a>
-    </li>
-    <li>
-        <a href="https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Twilight_Princess" target="_blank"> Twilight Princess
-        </a>
-    </li>
-    </ul>
-</div>
-
-<!-- DBZ List -->
-<div id="dbz-list" class="game-list" style="display:none;">
-    <ol id="game-list-dbz">
-        <li class="game-item">
-            <h3>Cell Saga</h3>
-            <img src="Cell-Saga.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-        <li class="game-item">
-            <h3>Frieza/Namek Saga</h3>
-            <img src="dbz-frieza.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-        <li class="game-item">
-            <h3>Saiyan Saga</h3>
-            <img src="saiyan-saga.jpg" width="250">
-            <p>Votes: <span class="vote-count">0</span></p>
-            <button onclick="changeVote(this, 1)">UpVote</button>
-            <button onclick="changeVote(this, -1)">DownVote</button>
-        </li>
-    </ol>
-
-    <div class="comment-section">
-        <h4>Comments</h4>
-        <ul id="comments-list-dbz"></ul>
-        <input type="text" id="input-dbz" placeholder="Add a comment..." 
-               onkeydown="checkEnter(event, 'input-dbz', 'comments-list-dbz')">
-        <button onclick="addComment('input-dbz', 'comments-list-dbz')">Post</button>
-    </div>
-
-
-    <h2>More Info on the sagas</h2>
-<ul>
-    <li>
-        <a href="dragonball.fandom.com/wiki/Cell_Saga" target="_blank"> Cell Saga 
-        </a>
-    </li>
-    <li>
-        <a href="dragonball.fandom.com/wiki/Frieza_Saga" target="_blank"> Frieza Saga
-        </a>
-    </li>
-    <li>
-        <a href="dragonball.fandom.com/wiki/Saiyan_Saga" target="_blank"> Saiyan Saga
-        </a>
-    </li>
-    </ul>
-</div>
-
-<!-- Zelda Music -->
-<audio id="zelda-music" loop data-list="zelda">
-    <source src="great-fairy-fountain.mp3" type="audio/mpeg">
-</audio>
-
-<!-- DBZ Music -->
-<audio id="dbz-music" loop data-list="dbz">
-    <source src="Dan Dan Kokoro Hikareteku.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Vote Sound (shared) -->
-<audio id="vote-sound">
-    <source src="rupee.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-// Toggle between lists
-function showList(listName) {
-    const lists = document.querySelectorAll('.game-list');
-    lists.forEach(l => l.style.display = 'none'); // hide all
-    document.getElementById(listName + '-list').style.display = 'block'; // show chosen
-
-    // Load saved volume for this list
-const slider = document.getElementById("volume-slider");
-const music = document.querySelector(`audio[data-list="${listName}"]`);
-
-const savedVolume = localStorage.getItem("music-volume-" + listName);
-
-if (savedVolume !== null) {
-    slider.value = savedVolume;
-    music.volume = savedVolume;
-} else {
-    slider.value = 0.5;
-    music.volume = 0.5;
-}
-
-    // Change colors per list
-    const body = document.body;
-    const h1 = document.querySelector('h1');
-    if(listName === 'zelda') {
-        body.style.backgroundColor = 'rgb(0, 128, 0)';
-        h1.style.color = 'rgb(255, 215, 0)';
-    } else if(listName === 'dbz') {
-        body.style.backgroundColor = 'rgb(0, 150, 255)';
-        h1.style.color = 'orange';
-    }
-
-    // Pause all music first
-    const audios = document.querySelectorAll('audio[data-list]');
-    audios.forEach(audio => audio.pause());
-    // Play only if saved state is "on"
-    const savedState = localStorage.getItem("music-" + listName);
-    if(savedState === "on") music.play();
-
-    // Update button text to match current state
-    const button = document.getElementById("music-toggle");
-    button.textContent = (savedState === "on") ? "🔊 Music On" : "🔇 Music Off";
-}
-// Voting
-function changeVote(button, amount) {
-    const listItem = button.closest(".game-item");
-    const voteSpan = listItem.querySelector(".vote-count");
-    const gameName = listItem.querySelector("h3").textContent;
-    const listContainer = listItem.closest(".game-list").id;
-    
-    // Unique keys for localStorage
-    const storageKey = listContainer + "-" + gameName;
-    const hasVotedKey = "hasVoted-" + storageKey;
-
-    // 1. Check if they have already voted for this specific item
-    /*if (localStorage.getItem(hasVotedKey)) {
-        alert("You have already cast your vote for " + gameName + "!");
-        return;
-    }*/
-
-    let currentVotes = parseInt(voteSpan.textContent) || 0;
-
-    // 2. Prevent the vote from going below 0
-    // If they try to downvote (amount is -1) and it's already 0, stop them.
-    if (amount < 0 && currentVotes <= 0) {
-        alert("Votes are already at the minimum!");
-        return;
-    }
-
-    // 3. Apply the vote
-    let newVotes = currentVotes + amount;
-    voteSpan.textContent = newVotes;
-
-    // 4. Save the new total and mark that they have voted
-    localStorage.setItem(storageKey, newVotes);
-    localStorage.setItem(hasVotedKey, "true");
-
-    // Play sound on upvote
-    if (amount > 0) {
-        const sound = document.getElementById("vote-sound");
-        if (sound) sound.play();
-    }
-
-    // 5. Disable the buttons visually so they know they can't click again
-    /*listItem.querySelectorAll("button").forEach(btn => {
-        btn.disabled = true;
-        btn.style.opacity = "0.5";
-        btn.style.cursor = "not-allowed";
-    });*/
-
-    sortGames(listItem.closest("ol"));
-}
-
-/*function resetVotes() {
-    const activeList = getActiveListName(); // Gets 'zelda' or 'dbz'
-    const listId = activeList + "-list";
-    
-    if (!confirm(`Clear your votes for the ${activeList.toUpperCase()} list?`)) {
-        return;
-    }
-
-    // 1. Loop through localStorage
-    Object.keys(localStorage).forEach(key => {
-        // 2. Only remove keys related to the active list
-        // This targets both "hasVoted-zelda-list-..." and the vote counts
-        if (key.includes(listId)) {
-            localStorage.removeItem(key);
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
         }
-    });
-
-    // 3. Reload to refresh the UI and buttons
-    location.reload();
-}*/
-
-// Sort function per list
-function sortGames(ol) {
-    const items = Array.from(ol.getElementsByClassName("game-item"));
-    items.sort((a, b) => parseInt(b.querySelector(".vote-count").textContent) - 
-                         parseInt(a.querySelector(".vote-count").textContent));
-    items.forEach(i => ol.appendChild(i));
-}
-
-// Comments
-function addComment(inputId, listId) {
-    const input = document.getElementById(inputId);
-    const list = document.getElementById(listId);
-    if (input.value.trim() === "") { alert("Please type something first!"); return; }
-    createCommentElement(input.value, list);
-    saveComments();
-    input.value = "";
-}
-
-function createCommentElement(text, ul) {
-    const li = document.createElement("li");
-    li.style.display = "inline-flex";
-    li.style.alignItems = "center";
-    li.style.gap = "5px";
-    li.style.marginBottom = "5px";
-
-    const span = document.createElement("span");
-    span.textContent = text;
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "❌";
-    deleteBtn.style.border = "none";
-    deleteBtn.style.background = "transparent";
-    deleteBtn.style.cursor = "pointer";
-    deleteBtn.onclick = function() { 
-        li.remove(); 
-        saveComments(); 
-    };
-
-    li.appendChild(span);
-    li.appendChild(deleteBtn);
-    ul.appendChild(li);
-}
-
-// Enter key for comments
-function checkEnter(event, inputId, listId) {
-    if(event.key === "Enter") {
-        event.preventDefault();
-        addComment(inputId, listId);
-    }
-}
-
-// Save/load comments for multiple lists
-function saveComments() {
-    const lists = document.querySelectorAll('.game-list');
-    lists.forEach(listDiv => {
-        const id = listDiv.id;
-        const comments = Array.from(listDiv.querySelectorAll('ul li span')).map(s => s.textContent);
-        localStorage.setItem("comments-" + id, JSON.stringify(comments));
-    });
-}
-
-function loadComments() {
-    const lists = document.querySelectorAll('.game-list');
-    lists.forEach(listDiv => {
-        const id = listDiv.id;
-        const saved = localStorage.getItem("comments-" + id);
-        if(saved) {
-            const ul = listDiv.querySelector('ul');
-            const arr = JSON.parse(saved);
-            arr.forEach(text => createCommentElement(text, ul));
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
         }
-    });
-}
+        updateBannerVisibility();
+      }
 
-// Music
-function toggleMusic() {
-    // Find the visible list
-    const lists = document.querySelectorAll('.game-list');
-    let activeList;
-    lists.forEach(l => { if(l.style.display !== 'none') activeList = l; });
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/_buildsAirplaneGame.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/_buildsAirplaneGame.data.br",
+        frameworkUrl: buildUrl + "/_buildsAirplaneGame.framework.js.br",
+        codeUrl: buildUrl + "/_buildsAirplaneGame.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "JacksonMKrizanWIPFlying10112024",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
 
-    const listName = activeList.id.replace('-list','');
-    const music = document.querySelector(`audio[data-list="${listName}"]`);
-    const button = document.getElementById("music-toggle");
+      // By default Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
 
-    // Toggle music
-    if (music.paused) {
-        music.play();
-        button.textContent = "🔊 Music On";
-        localStorage.setItem("music-" + listName, "on");
-    } else {
-        music.pause();
-        button.textContent = "🔇 Music Off";
-        localStorage.setItem("music-" + listName, "off");
-    }
-}
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
 
-function changeVolume(value) {
-    const activeList = getActiveListName();
-    const music = document.querySelector(`audio[data-list="${activeList}"]`);
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.className = "unity-mobile";
 
-    music.volume = value;
-    localStorage.setItem("music-volume-" + activeList, value);
-}
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
 
-// First load: show default list and handle music/button
-document.addEventListener("DOMContentLoaded", () => {
-    showList('zelda'); // Shows Zelda by default and updates music/button
-});
 
-// Load votes and comments
-window.addEventListener("load", function() {
-    const lists = document.querySelectorAll('.game-list');
-    
-    lists.forEach(l => {
-        const listId = l.id;
-        const ol = l.querySelector('ol');
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        l.querySelectorAll('.game-item').forEach(item => {
-            const gameName = item.querySelector('h3').textContent;
-            
-            // 1. Load the vote count
-            /*const savedVotes = localStorage.getItem(listId + '-' + gameName);
-            if(savedVotes !== null) {
-                item.querySelector('.vote-count').textContent = savedVotes;
-            }
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
 
-            // 2. Check if this item was already voted on and disable buttons
-            const hasVoted = localStorage.getItem("hasVoted-" + listId + '-' + gameName);
-            if (hasVoted) {
-                item.querySelectorAll("button").forEach(btn => {
-                    btn.disabled = true;
-                    btn.style.opacity = "0.5";
-                    btn.style.cursor = "not-allowed";
-                });
-            }*/
-        });
+      loadingBar.style.display = "block";
 
-        sortGames(ol); 
-    });
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+              }).catch((message) => {
+                alert(message);
+              });
+            };
 
-    loadComments();
-});
+      document.body.appendChild(script);
 
-function getActiveListName() {
-    const lists = document.querySelectorAll('.game-list');
-    let activeList;
-    lists.forEach(l => { if(l.style.display !== 'none') activeList = l; });
-    return activeList.id.replace('-list','');
-}
-</script>
-</body>
+    </script>
+  </body>
 </html>
